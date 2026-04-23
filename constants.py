@@ -1,0 +1,3 @@
+EMAIL_REGEX = ""
+PASSWORD_REGEX = ""
+DATA_FILE = ""
