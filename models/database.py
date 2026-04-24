@@ -38,7 +38,7 @@ class Database:
             return
 
     # Update student's record with new enrolment
-    def add_enrolment(self, input_data) -> None:
+    def add_enrolment(self, input_data) -> dict | None:
         try:
             student_id = input_data.get("student_id")
             new_enrolment = input_data.get("enrolment")
@@ -58,6 +58,8 @@ class Database:
             # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
+            
+            return data
         except Exception as e:
             print(f"Error writing to file: {e}")
             return
@@ -107,7 +109,7 @@ class Database:
             return
 
     # Remove single enrolment of a student
-    def remove_enrolment(self, input_data) -> None:
+    def remove_enrolment(self, input_data) -> dict | None:
         try:
             student_id = input_data.get("student_id")
             subject_id = input_data.get("subject_id")
@@ -134,6 +136,8 @@ class Database:
             # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
+
+            return data
         except Exception as e:
             print(f"Error writing to file: {e}")
             return
