@@ -1,3 +1,6 @@
+from models.database import Database
+
+
 def main():
     print("Enrolment System Initialized!")
 
