@@ -19,116 +19,142 @@ class Database:
                 pickle.dump({}, file)
 
     # Add new student record on register
-    def add_record(self, inputData) -> dict | Exception:
+    def add_record(self, input_data) -> str | None:
         try:
             # Read existing data first
             with open(self.data_file_path, "rb") as file:
                 existing_data = pickle.load(file)
 
-            new_data = {**existing_data, **inputData}
+            new_data = {**existing_data, **input_data}
+
             # Overwrite students.data file with the latest data (existing + new)
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(new_data, file)
-                # Return the newly added student data for confirmation
-                student_id = list(inputData.keys())[0]
+
+                student_id = list(input_data.keys())[0]
                 return student_id
         except Exception as e:
             print(f"Error writing to file: {e}")
-            return e
+            return
 
     # Update student's record with new enrolment
     def add_enrolment(self, input_data) -> None:
-        student_id = input_data.get("student_id")
-        new_enrolment = input_data.get("enrolment")
+        try:
+            student_id = input_data.get("student_id")
+            new_enrolment = input_data.get("enrolment")
 
-        with open(self.data_file_path, "rb") as file:
-            data = pickle.load(file)
+            with open(self.data_file_path, "rb") as file:
+                data = pickle.load(file)
 
-            student_data = data[student_id]
-            enrolments = student_data.get("enrolments", [])
-            enrolments.append(new_enrolment)
+                student_data = data.get(student_id)
+                if not student_data:
+                    return
+                enrolments = student_data.get("enrolments", [])
+                enrolments.append(new_enrolment)
 
-            student_data["enrolments"] = enrolments
-            data[student_id] = student_data
+                student_data["enrolments"] = enrolments
+                data[student_id] = student_data
 
-        # Write the updated data back to the file
-        with open(self.data_file_path, "wb") as file:
-            pickle.dump(data, file)
+            # Write the updated data back to the file
+            with open(self.data_file_path, "wb") as file:
+                pickle.dump(data, file)
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+            return
 
     # Read single student record or all records
-    def list_records(self, input_data) -> dict | Exception:
+    def list_records(self, input_data) -> dict | None:
         try:
-            studentId, listAllRecords = (
+            student_id, list_all_records = (
                 input_data.get("student_id"),
                 input_data.get("list_all", False),
             )
             with open(self.data_file_path, "rb") as file:
                 data = pickle.load(file)
 
-                if listAllRecords:
+                if list_all_records:
                     return data
                 else:
-                    student_data = data.get(studentId, None)
-                    return {studentId: student_data}
+                    if student_id not in data:
+                        return {}
+                    student_data = data.get(student_id)
+                    return {student_id: student_data}
         except Exception as e:
             print(f"Error reading from file: {e}")
-            return e
+            return
 
     # Update Password for a student
     def update_password(self, input_data) -> None:
-        student_id = input_data.get("student_id")
-        new_password = input_data.get("new_password")
+        try:
+            student_id = input_data.get("student_id")
+            new_password = input_data.get("new_password")
 
-        with open(self.data_file_path, "rb") as file:
-            data = pickle.load(file)
+            with open(self.data_file_path, "rb") as file:
+                data = pickle.load(file)
 
-            student_data = data[student_id]
-            student_data["password"] = new_password
-            data[student_id] = student_data
+                student_data = data.get(student_id)
+                if not student_data:
+                    return
 
-        # Write the updated data back to the file
-        with open(self.data_file_path, "wb") as file:
-            pickle.dump(data, file)
+                student_data["password"] = new_password
+                data[student_id] = student_data
+
+            # Write the updated data back to the file
+            with open(self.data_file_path, "wb") as file:
+                pickle.dump(data, file)
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+            return
 
     # Remove single enrolment of a student
     def remove_enrolment(self, input_data) -> None:
-        student_id = input_data.get("student_id")
-        subject_id = input_data.get("subject_id")
+        try:
+            student_id = input_data.get("student_id")
+            subject_id = input_data.get("subject_id")
 
-        with open(self.data_file_path, "rb") as file:
-            data = pickle.load(file)
+            with open(self.data_file_path, "rb") as file:
+                data = pickle.load(file)
 
-            student_data = data[student_id]
-            enrolments = student_data.get("enrolments", [])
+                student_data = data.get(student_id)
+                if not student_data:
+                    return
 
-            # Removal process: only keep enrolments that do not match the subject_id to be removed
-            updated_enrolments = [
-                enrolment
-                for enrolment in enrolments
-                if enrolment.get("subject") != subject_id
-            ]
+                enrolments = student_data.get("enrolments", [])
 
-            student_data["enrolments"] = updated_enrolments
-            data[student_id] = student_data
+                # Removal process: only keep enrolments that do not match the subject_id to be removed
+                updated_enrolments = [
+                    enrolment
+                    for enrolment in enrolments
+                    if enrolment.get("subject") != subject_id
+                ]
 
-        # Write the updated data back to the file
-        with open(self.data_file_path, "wb") as file:
-            pickle.dump(data, file)
+                student_data["enrolments"] = updated_enrolments
+                data[student_id] = student_data
+
+            # Write the updated data back to the file
+            with open(self.data_file_path, "wb") as file:
+                pickle.dump(data, file)
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+            return
 
     # Remove student records (for Admins)
-    def remove_records(self, data) -> None:
+    def remove_records(self, input_data) -> dict | None:
         try:
             student_id, remove_all = (
-                data.get("student_id"),
-                data.get("remove_all", False),
+                input_data.get("student_id"),
+                input_data.get("remove_all", False),
             )
             if remove_all:
                 with open(self.data_file_path, "wb") as file:
                     pickle.dump({}, file)
                     return
 
-            with open(self.data_file_path, "wb") as file:
+            with open(self.data_file_path, "rb") as file:
                 data = pickle.load(file)
+
+            if student_id not in data:
+                return
 
             del data[student_id]
             with open(self.data_file_path, "wb") as file:
