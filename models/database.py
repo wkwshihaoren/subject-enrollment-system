@@ -127,7 +127,7 @@ class Database:
                 updated_enrolments = [
                     enrolment
                     for enrolment in enrolments
-                    if enrolment.get("subject") != subject_id
+                    if enrolment.get("subject_id") != subject_id
                 ]
 
                 student_data["enrolments"] = updated_enrolments
