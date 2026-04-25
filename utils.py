@@ -7,20 +7,21 @@ COLOURS = {
     "ERROR": "\033[31m",  # red
     "INFO": "\033[33m",  # yellow
     "INPUT": "\033[36m",  # cyan
+    "INPUT_WARN": "\033[31m",  # red
 }
 
 RESET = "\033[0m"  # default white
 
 
 def c_print(text: str, level: str) -> None:
-    colour = COLOURS.get(level, "")
+    colour = COLOURS.get(level, RESET)
     # Reset colour after printing
     print(f"{colour}{text}{RESET}" if colour else text)
 
 
-def c_input(text: str) -> str:
+def c_input(text: str, level: str = "INPUT") -> str:
     # Reset colour after prompt
-    return input(f"{COLOURS['INPUT']}{text}{RESET}")
+    return input(f"{COLOURS.get(level, COLOURS['INPUT'])}{text}{RESET}")
 
 
 def validate_email(email: str) -> bool:

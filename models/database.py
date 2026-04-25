@@ -58,7 +58,7 @@ class Database:
             # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
-            
+
             return data
         except Exception as e:
             print(f"Error writing to file: {e}")
