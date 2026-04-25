@@ -1,30 +1,29 @@
-import pickle
-import constants
+import utils
+from models.database import Database
 
 
 class AdminController:
     def __init__(self):
-        pass
+        self.database = Database()
 
     def format_database(self):
-        print("Clearing students database")
+        utils.c_print("Clearing students database", "INFO")
 
         a_input = input("Are you sure you want to clear the database (Y)ES/(N)O: ")
 
         if a_input == "Y":
-            with open(constants.DATA_FILE, "wb") as f:
-                pickle.dump({}, f)
-            print("Clearing students database")
+            self.database.remove_records({"remove_all": True})
+            print("Students data cleared")
         elif a_input == "N":
             pass
         else:
             print("Invalid input")
 
     def group_student(self):
-        print("Grade Grouping")
+        utils.c_print("Grade Grouping", "INFO")
 
-        with open(constants.DATA_FILE, "rb") as file:
-            s_data = pickle.load(file)
+        s_data = self.database.list_records({"list_all": True})
+
         if len(s_data) == 0:
             print("        < Nothing to Display >")
         else:
@@ -40,11 +39,8 @@ class AdminController:
                 )
 
     def partition_student(self):
-        print("PASS/FALL Partition")
-        with open(constants.DATA_FILE, "rb") as file:
-            s_data = pickle.load(file)
-        # pass_list = {k:v for k,v in s_data.items() if v["overall_grade"] != "F"}
-        # print("FALL --> ", end="")
+        utils.c_print("PASS/FALL Partition", "INFO")
+        s_data = self.database.list_records({"list_all": True})
 
         pass_list = []
         fail_list = []
@@ -54,7 +50,7 @@ class AdminController:
                 fail_list.append(
                     f"{info['name']} :: {sid} --> GRADE: {info['overall_grade']} - MARK: {info['average_mark']}"
                 )
-        print(f"FAIL --> [{','.join(pass_list)}]")
+        print(f"FAIL --> [{','.join(fail_list)}]")
 
         for sid, info in s_data.items():
             if info["overall_grade"] != "F":
@@ -64,16 +60,19 @@ class AdminController:
         print(f"PASS --> [{','.join(pass_list)}]")
 
     def remove_student(self):
-        pass
-        # s_id_get = input("Remove by ID: ")
-        # with open(constants.DATA_FILE, "rb") as file:
-        #     s_data = pickle.load(file)
+
+        s_id_get = input("Remove by ID: ")
+        test = self.database.remove_records({"student_id": s_id_get})
+        if test is None:
+            utils.c_print(f"Student {s_id_get} dose not exist", "ERROR")
+        else:
+            print(f"Removing Student {s_id_get} Account")
 
     def show_student(self):
-        print("Student List")
+        utils.c_print("Student List", "INFO")
 
-        with open(constants.DATA_FILE, "rb") as file:
-            s_data = pickle.load(file)
+        s_data = self.database.list_records({"list_all": True})
+
         if len(s_data) == 0:
             print("        < Nothing to Display >")
         else:
@@ -116,7 +115,33 @@ class AdminController:
 #         ],
 #         "average_mark": 55.67,
 #         "overall_grade": "P"},
+#     "004": {
+#         "name": "Test Test1",
+#         "password": "Wangjing123",
+#         "email": "Test.Test1@university.com",
+#         "courses": [
+#             {"subject": "541", "mark": 55, "grade": "P"},
+#             {"subject": "455", "mark": 57, "grade": "P"},
+#             {"subject": "742", "mark": 55, "grade": "P"},
+#             {"subject": "744", "mark": 59, "grade": "P"}
+#         ],
+#         "average_mark": 90.00,
+#         "overall_grade": "HD"},
+#     "005": {
+#         "name": "Test Test1",
+#         "password": "Wangjing123",
+#         "email": "Test.Test1@university.com",
+#         "courses": [
+#             {"subject": "541", "mark": 55, "grade": "P"},
+#             {"subject": "455", "mark": 57, "grade": "P"},
+#             {"subject": "742", "mark": 55, "grade": "P"},
+#             {"subject": "744", "mark": 59, "grade": "P"}
+#         ],
+#         "average_mark": 30,
+#         "overall_grade": "F"},
 #
 # }
-# with open(constants.DATA_FILE, "wb") as file:
+
+# with open(f"../{constants.DATA_FILE}", "wb") as file:
 #     pickle.dump(student_data, file)
+#     print("finish")

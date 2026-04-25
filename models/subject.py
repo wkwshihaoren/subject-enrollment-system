@@ -1,4 +1,5 @@
 from controllers.enrolment_controller import EnrolmentController
+import utils
 
 
 class Subject:
@@ -8,7 +9,9 @@ class Subject:
     def s_enrolment_menu(self, student_id):
         subject = EnrolmentController()
         while True:
-            s_enrolment_input = input("Student Course Menu (c/e/r/s/x) :").lower()
+            s_enrolment_input = utils.c_input(
+                "Student Course Menu (c/e/r/s/x) :"
+            ).lower()
 
             match s_enrolment_input:
                 case "c":
