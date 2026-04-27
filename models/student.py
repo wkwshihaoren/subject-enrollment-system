@@ -1,42 +1,94 @@
-import random
-from database import Database
-from validator import Validator
-from subject import Subject, Enrolment
-
-CYAN   = "\033[96m"
-GREEN  = "\033[92m"
-YELLOW = "\033[93m"
-RED    = "\033[91m"
-RESET  = "\033[0m"
+import utils
+from models.database import Database
+from models.subject import Subject
 
 
 class Student:
+    def __init__(self):
+        self.student_id = None
 
-    def __init__(self, name, email, password, student_id=None, subjects=None):
-        self.id       = student_id if student_id else f"{random.randint(1, 999999):06d}"
-        self.name     = name
-        self.email    = email
-        self.password = password
-        self.subjects = subjects if subjects else []
+    def s_menu(self):
+        while True:
+            s_input = utils.c_input("        Student System (l/r/x): ").lower()
 
-    def get_average_mark(self):
-        if not self.subjects:
-            return 0
-        return sum(s.mark for s in self.subjects) / len(self.subjects)
+            match s_input:
+                case "l":
+                    self._login()
+                case "r":
+                    self._register()
+                case "x":
+                    break
+                case _:
+                    utils.c_print("Invalid input", "ERROR")
 
-    def get_status(self):
-        return "PASS" if self.get_average_mark() >= 50 else "FAIL"
+    def _register(self):
+        utils.c_print("        Student Sign Up", "SUCCESS")
 
-    def to_dict(self):
-        return {
-            "id":       self.id,
-            "name":     self.name,
-            "email":    self.email,
-            "password": self.password,
-            "subjects": [s.to_dict() for s in self.subjects],
-        }
+        while True:
+            email = input("        Email: ")
+            password = input("        Password: ")
 
-    @classmethod
-    def from_dict(cls, data):
-        subjects = [Subject.from_dict(s) for s in data.get("subjects", [])]
-        return cls(data["name"], data["email"], data["password"], data["id"], subjects)
+            if not utils.validate_email(email) or not utils.validate_password(password):
+                utils.c_print("        Incorrect email or password format", "ERROR")
+                continue
+
+            utils.c_print("        email and password formats acceptable", "INFO")
+
+            # check if student already exists by email
+            db = Database()
+            all_data = db.list_records({"list_all": True}) or {}
+            existing = next(
+                (d for d in all_data.values() if d.get("email") == email),
+                None
+            )
+            if existing:
+                utils.c_print(f"        Student {existing['name']} already exists", "ERROR")
+                return
+
+            name = input("        Name: ")
+            student_id = utils.randomize_student_id()
+
+            record = {
+                student_id: {
+                    "name": name,
+                    "email": email,
+                    "password": password,
+                    "enrolments": [],
+                    "average_mark": 0,
+                    "overall_grade": "F",
+                }
+            }
+            db.add_record(record)
+            utils.c_print(f"        Enrolling Student {name}", "INFO")
+            return
+
+    def _login(self):
+        utils.c_print("        Student Sign In", "SUCCESS")
+
+        email = input("        Email: ")
+        password = input("        Password: ")
+
+        if not utils.validate_email(email) or not utils.validate_password(password):
+            utils.c_print("        Incorrect email or password format", "ERROR")
+            return
+
+        utils.c_print("        email and password formats acceptable", "INFO")
+
+        db = Database()
+        all_data = db.list_records({"list_all": True}) or {}
+        match = next(
+            ((sid, d) for sid, d in all_data.items()
+             if d.get("email") == email and d.get("password") == password),
+            None
+        )
+
+        if not match:
+            utils.c_print("        Student does not exist", "ERROR")
+            return
+
+        student_id, _ = match
+        self.student_id = student_id
+
+        # hand off to Subject enrolment menu
+        subject = Subject()
+        subject.s_enrolment_menu(student_id)
