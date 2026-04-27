@@ -31,7 +31,3 @@ class Admin:
 
                 case _:
                     print("Invalid input")
-
-
-admin = Admin()
-admin.a_menu()
