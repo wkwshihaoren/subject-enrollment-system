@@ -1,1 +1,112 @@
+from tkinter import *
+from tkinter import ttk, messagebox
 
+root = Tk()
+root.title("GUIUniApp - Login Window")
+root.geometry("540x320")
+root.resizable(False, False)
+
+uts_logo = PhotoImage(file="uts.png")
+
+frame1 = ttk.Frame(root, padding=20)
+frame1.grid(row=0, column=0, sticky="nsew")
+
+# ---------------------------------
+# PDF classes
+# Student
+# Subject
+# Database
+#
+# Controller / GUI class names are not fixed in the PDF.
+# Use placeholders for teammate-defined names.
+# ---------------------------------
+
+
+def submit_login():
+    email_value = email_var.get().strip()
+    password_value = password_var.get().strip()
+
+    if not email_value or not password_value:
+        messagebox.showerror("Login Error", "Please enter both email and password.")
+        return
+
+    print("Email:", email_value)
+    print("Password:", password_value)
+
+    # TODO: connect to #ControllerClass#
+    # Example later:
+    # result = #ControllerClass#.#LoginMethod#(email_value, password_value)
+
+    # TODO: read registered students from students.data using Database
+    # Example later:
+    # db = Database()
+    # student = db.#ReadStudentMethod#("students.data")
+
+    # TODO: validate email format with #EmailRegexName#
+    # TODO: validate password format with #PasswordRegexName#
+
+    # TODO: open #EnrolmentWindowClass# after successful login
+    # TODO: show #ExceptionWindowClass# for:
+    # - empty login fields
+    # - incorrect student credentials
+    # - incorrect email format
+
+    messagebox.showinfo("Submit", "UI submit test completed.")
+
+
+def clear_fields():
+    email_var.set("")
+    password_var.set("")
+
+
+main_frame = ttk.Frame(root, padding=20)
+main_frame.grid(row=0, column=0, sticky="nsew")
+
+title_label = ttk.Label(
+    main_frame,
+    text="Login Window",
+    font=("Times New Roman", 18, "bold"),
+)
+title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
+
+instruction_label = ttk.Label(
+    main_frame,
+    text=(
+        "Registered students only.\n"
+        "Please enter your email and password to continue.\n"
+        "No admin options are available in GUIUniApp."
+    ),
+    foreground="#16357c",
+    font=("Times New Roman", 12),
+    wraplength=420,
+    justify="center",
+)
+instruction_label.grid(row=1, column=0, columnspan=2, pady=(0, 20))
+
+email_label = ttk.Label(main_frame, text="Email")
+email_label.grid(row=2, column=0, sticky=E, padx=(0, 10), pady=8)
+
+email_var = StringVar()
+email_entry = ttk.Entry(main_frame, textvariable=email_var, width=28)
+email_entry.grid(row=2, column=1, pady=8)
+
+password_label = ttk.Label(main_frame, text="Password")
+password_label.grid(row=3, column=0, sticky=E, padx=(0, 10), pady=8)
+
+password_var = StringVar()
+password_entry = ttk.Entry(main_frame, textvariable=password_var, width=28, show="*")
+password_entry.grid(row=3, column=1, pady=8)
+
+button_frame = ttk.Frame(main_frame)
+button_frame.grid(row=4, column=0, columnspan=2, pady=(20, 0))
+
+submit_button = ttk.Button(button_frame, text="Submit", command=submit_login)
+submit_button.grid(row=0, column=0, padx=5)
+
+clear_button = ttk.Button(button_frame, text="Clear", command=clear_fields)
+clear_button.grid(row=0, column=1, padx=5)
+
+quit_button = ttk.Button(button_frame, text="Quit", command=root.destroy)
+quit_button.grid(row=0, column=2, padx=5)
+
+email_entry.focus()
