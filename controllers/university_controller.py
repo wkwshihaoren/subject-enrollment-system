@@ -2,6 +2,7 @@ from models.admin import Admin
 from models.student import Student
 import utils
 
+
 class UniversityController:
     def __init__(self):
         self.admin = Admin()
@@ -17,7 +18,7 @@ class UniversityController:
                 case "S":
                     self.student.s_menu()
                 case "X":
-                    utils.c_print("Thank You","INFO")
+                    utils.c_print("Thank You", "INFO")
                     break
                 case _:
-                    utils.c_print("Invalid Input","ERROR")
+                    utils.c_print("Invalid Input", "ERROR")
