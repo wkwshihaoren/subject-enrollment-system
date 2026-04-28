@@ -8,7 +8,7 @@ class Admin:
 
     def a_menu(self):
         while True:
-            s_input = utils.c_input("Admin System (c/g/p/r/s/x) :").lower()
+            s_input = utils.c_input("        Admin System (c/g/p/r/s/x) :").lower()
 
             match s_input:
                 case "c":

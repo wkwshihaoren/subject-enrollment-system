@@ -169,3 +169,27 @@ class Database:
         except Exception as e:
             print(f"Error reading from file: {e}")
             return
+
+    def update_mark_grade(self, input_data) -> None:
+        try:
+            student_id = input_data.get("student_id")
+            get_overall_grade = input_data.get("get_overall_grade")
+            get_average_mark = input_data.get("get_average_mark")
+
+            with open(self.data_file_path, "rb") as file:
+                data = pickle.load(file)
+
+                student_data = data.get(student_id)
+                if not student_data:
+                    return
+
+                student_data["average_mark"] = get_average_mark
+                student_data["overall_grade"] = get_overall_grade
+                data[student_id] = student_data
+
+            # Write the updated data back to the file
+            with open(self.data_file_path, "wb") as file:
+                pickle.dump(data, file)
+        except Exception as e:
+            print(f"Error writing to file: {e}")
+            return

@@ -46,3 +46,19 @@ For coloured inputs, just use the `c_input` function. This displays the input us
 ```bash
 c_input("This is a prompt")
 ```
+## Data schema
+```json
+{
+     "001": {
+         "name": "Test Test1",
+         "password": "Wangjing123",
+         "email": "Test.Test1@university.com",
+         "enrolments": [
+             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
+             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
+             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"},
+             {"subject_name": "subject4","subject_id": "565", "mark": 59, "grade": "P"}
+         ],
+         "average_mark": 55.50,
+         "overall_grade": "P"}
+}

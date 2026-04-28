@@ -38,11 +38,12 @@ class Student:
             db = Database()
             all_data = db.list_records({"list_all": True}) or {}
             existing = next(
-                (d for d in all_data.values() if d.get("email") == email),
-                None
+                (d for d in all_data.values() if d.get("email") == email), None
             )
             if existing:
-                utils.c_print(f"        Student {existing['name']} already exists", "ERROR")
+                utils.c_print(
+                    f"        Student {existing['name']} already exists", "ERROR"
+                )
                 return
 
             name = input("        Name: ")
@@ -64,31 +65,34 @@ class Student:
 
     def _login(self):
         utils.c_print("        Student Sign In", "SUCCESS")
+        while True:
+            email = input("        Email: ")
+            password = input("        Password: ")
 
-        email = input("        Email: ")
-        password = input("        Password: ")
+            if not utils.validate_email(email) or not utils.validate_password(password):
+                utils.c_print("        Incorrect email or password format", "ERROR")
+                continue
 
-        if not utils.validate_email(email) or not utils.validate_password(password):
-            utils.c_print("        Incorrect email or password format", "ERROR")
-            return
+            utils.c_print("        email and password formats acceptable", "INFO")
 
-        utils.c_print("        email and password formats acceptable", "INFO")
+            db = Database()
+            all_data = db.list_records({"list_all": True}) or {}
+            match = next(
+                (
+                    (sid, d)
+                    for sid, d in all_data.items()
+                    if d.get("email") == email and d.get("password") == password
+                ),
+                None,
+            )
 
-        db = Database()
-        all_data = db.list_records({"list_all": True}) or {}
-        match = next(
-            ((sid, d) for sid, d in all_data.items()
-             if d.get("email") == email and d.get("password") == password),
-            None
-        )
+            if not match:
+                utils.c_print("        Student does not exist", "ERROR")
+                return
 
-        if not match:
-            utils.c_print("        Student does not exist", "ERROR")
-            return
-
-        student_id, _ = match
-        self.student_id = student_id
-
+            student_id, _ = match
+            self.student_id = student_id
+            break
         # hand off to Subject enrolment menu
         subject = Subject()
         subject.s_enrolment_menu(student_id)

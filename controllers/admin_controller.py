@@ -20,7 +20,7 @@ class AdminController:
             print("Invalid input")
 
     def group_student(self):
-        utils.c_print("Grade Grouping", "INFO")
+        utils.c_print("        Grade Grouping", "INFO")
 
         s_data = self.database.list_records({"list_all": True})
 
@@ -33,13 +33,14 @@ class AdminController:
 
             for i in group_result:
                 print(
+                    "       ",
                     i[1]["overall_grade"],
                     " --> ",
                     f"[{i[1]['name']} :: {i[0]} --> GRADE: {i[1]['overall_grade']} - MARK: {i[1]['average_mark']}]",
                 )
 
     def partition_student(self):
-        utils.c_print("PASS/FALL Partition", "INFO")
+        utils.c_print("        PASS/FALL Partition", "INFO")
         s_data = self.database.list_records({"list_all": True})
 
         pass_list = []
@@ -50,26 +51,26 @@ class AdminController:
                 fail_list.append(
                     f"{info['name']} :: {sid} --> GRADE: {info['overall_grade']} - MARK: {info['average_mark']}"
                 )
-        print(f"FAIL --> [{','.join(fail_list)}]")
+        print(f"        FAIL --> [{','.join(fail_list)}]")
 
         for sid, info in s_data.items():
             if info["overall_grade"] != "F":
                 pass_list.append(
                     f"{info['name']} :: {sid} --> GRADE: {info['overall_grade']} - MARK: {info['average_mark']}"
                 )
-        print(f"PASS --> [{','.join(pass_list)}]")
+        print(f"        PASS --> [{','.join(pass_list)}]")
 
     def remove_student(self):
 
-        s_id_get = input("Remove by ID: ")
+        s_id_get = input("        Remove by ID: ")
         test = self.database.remove_records({"student_id": s_id_get})
         if test is None:
-            utils.c_print(f"Student {s_id_get} dose not exist", "ERROR")
+            utils.c_print(f"        Student {s_id_get} dose not exist", "ERROR")
         else:
-            print(f"Removing Student {s_id_get} Account")
+            print(f"        Removing Student {s_id_get} Account")
 
     def show_student(self):
-        utils.c_print("Student List", "INFO")
+        utils.c_print("        Student List", "INFO")
 
         s_data = self.database.list_records({"list_all": True})
 
@@ -77,75 +78,12 @@ class AdminController:
             print("        < Nothing to Display >")
         else:
             for sid, info in s_data.items():
-                print(info["name"], " : : ", sid, " --> ", "Email: ", info["email"])
-
-#
-# student_data = {
-#     "001": {
-#         "name": "Test Test1",
-#         "password": "Wangjing123",
-#         "email": "Test.Test1@university.com",
-#         "enrolments": [
-#             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
-#             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject4","subject_id": "565", "mark": 59, "grade": "P"}
-#         ],
-#         "average_mark": 55.50,
-#         "overall_grade": "P"},
-#     "002": {
-#         "name": "Test Test2",
-#         "password": "Wangjing234",
-#         "email": "Test.Test2@university.com",
-#         "enrolments": [
-#             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
-#             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"}
-#         ],
-#         "average_mark": 55.67,
-#         "overall_grade": "P"},
-#     "003": {
-#         "name": "Test Test3",
-#         "password": "Wangjing345",
-#         "email": "Test.Test3@university.com",
-#         "enrolments": [
-#             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
-#             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"}
-#         ],
-#         "average_mark": 55.67,
-#         "overall_grade": "P"},
-#     "004": {
-#         "name": "Test Test1",
-#         "password": "Wangjing123",
-#         "email": "Test.Test1@university.com",
-#         "enrolments": [
-#             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
-#             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject4","subject_id": "565", "mark": 59, "grade": "P"}
-#         ],
-#         "average_mark": 90.00,
-#         "overall_grade": "HD"},
-#     "005": {
-#         "name": "Test Test1",
-#         "password": "Wangjing123",
-#         "email": "Test.Test1@university.com",
-#         "enrolments": [
-#             {"subject_name": "subject1","subject_id": "541", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject2","subject_id": "534", "mark": 57, "grade": "P"},
-#             {"subject_name": "subject3","subject_id": "525", "mark": 55, "grade": "P"},
-#             {"subject_name": "subject4","subject_id": "565", "mark": 59, "grade": "P"}
-#         ],
-#         "average_mark": 30,
-#         "overall_grade": "F"},
-#
-# }
-#
-# with open(f"../{constants.DATA_FILE}", "wb") as file:
-#     pickle.dump(student_data, file)
-#     print("finish")
-#
-# with open(f"../{constants.DATA_FILE}", "rb") as file:
-#     data = pickle.load(file)
-#     print(data)
+                print(
+                    "       ",
+                    info["name"],
+                    " : : ",
+                    sid,
+                    " --> ",
+                    "Email: ",
+                    info["email"],
+                )

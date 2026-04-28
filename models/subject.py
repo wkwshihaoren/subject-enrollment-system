@@ -10,7 +10,7 @@ class Subject:
         subject = EnrolmentController()
         while True:
             s_enrolment_input = utils.c_input(
-                "Student Course Menu (c/e/r/s/x) :"
+                "                Student Course Menu (c/e/r/s/x) :"
             ).lower()
 
             match s_enrolment_input:
