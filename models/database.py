@@ -120,13 +120,13 @@ class Database:
 
                 enrolments = student_data.get("enrolments", [])
 
-                if not any(int(e.get("subject_id")) == int(subject_id) for e in enrolments):
+                if not any(e.get("subject_id") == subject_id for e in enrolments):
                     return
 
                 updated_enrolments = [
                     enrolment
                     for enrolment in enrolments
-                    if int(enrolment.get("subject_id")) != int(subject_id)
+                    if enrolment.get("subject_id") != subject_id
                 ]
 
                 student_data["enrolments"] = updated_enrolments

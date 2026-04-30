@@ -36,7 +36,7 @@ class AdminController:
                 c_print(f"{INDENT_LVL_1}{i[1]['overall_grade']} --> [{i[1]['name']} :: {i[0]} --> GRADE: {i[1]['overall_grade']} - MARK: {i[1]['average_mark']}]")
 
     def partition_student(self):
-        c_print(f"{INDENT_LVL_1}PASS/FALL Partition", "INFO")
+        c_print(f"{INDENT_LVL_1}PASS/FAIL Partition", "INFO")
         s_data = self.database.list_records({"list_all": True})
 
         pass_list = []
