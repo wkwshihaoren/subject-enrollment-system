@@ -1,27 +1,15 @@
 import re
 import random
-from constants import EMAIL_REGEX, PASSWORD_REGEX
-
-COLOURS = {
-    "SUCCESS": "\033[32m",  # green
-    "ERROR": "\033[31m",  # red
-    "INFO": "\033[33m",  # yellow
-    "INPUT": "\033[36m",  # cyan
-    "INPUT_WARN": "\033[31m",  # red
-}
-
-RESET = "\033[0m"  # default white
+from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET 
 
 
-def c_print(text: str, level: str) -> None:
-    colour = COLOURS.get(level, RESET)
-    # Reset colour after printing
+def c_print(text: str, type: str = RESET) -> None:
+    colour = COLOURS.get(type, RESET)
     print(f"{colour}{text}{RESET}" if colour else text)
 
 
-def c_input(text: str, level: str = "INPUT") -> str:
-    # Reset colour after prompt
-    return input(f"{COLOURS.get(level, COLOURS['INPUT'])}{text}{RESET}")
+def c_input(text: str, type: str = "INPUT") -> str:
+    return input(f"{COLOURS.get(type, COLOURS['INPUT'])}{text}{RESET}")
 
 
 def validate_email(email: str) -> bool:
@@ -45,7 +33,6 @@ def randomize_student_id() -> str:
 
 
 def calculate_grade_from_mark(mark: int) -> str:
-    # Ensure that mark is a number
     if not isinstance(mark, (int, float)):
         raise ValueError("Mark must be a number.")
 

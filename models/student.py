@@ -1,4 +1,5 @@
-import utils
+from utils import c_print, c_input, validate_email, validate_password, randomize_student_id
+from constants import INDENT_LVL_1
 from models.database import Database
 from models.subject import Subject
 
@@ -9,7 +10,7 @@ class Student:
 
     def s_menu(self):
         while True:
-            s_input = utils.c_input("        Student System (l/r/x): ").lower()
+            s_input = c_input(f"{INDENT_LVL_1}Student System (l/r/x): ").lower()
 
             match s_input:
                 case "l":
@@ -19,20 +20,20 @@ class Student:
                 case "x":
                     break
                 case _:
-                    utils.c_print("Invalid input", "ERROR")
+                    c_print(f"{INDENT_LVL_1}Invalid input", "ERROR")
 
     def _register(self):
-        utils.c_print("        Student Sign Up", "SUCCESS")
+        c_print(f"{INDENT_LVL_1}Student Sign Up", "SUCCESS")
 
         while True:
-            email = input("        Email: ")
-            password = input("        Password: ")
+            email = c_input(f"{INDENT_LVL_1}Email: ", "DEFAULT")
+            password = c_input(f"{INDENT_LVL_1}Password: ", "DEFAULT")
 
-            if not utils.validate_email(email) or not utils.validate_password(password):
-                utils.c_print("        Incorrect email or password format", "ERROR")
+            if not validate_email(email) or not validate_password(password):
+                c_print(f"{INDENT_LVL_1}Incorrect email or password format", "ERROR")
                 continue
 
-            utils.c_print("        email and password formats acceptable", "INFO")
+            c_print(f"{INDENT_LVL_1}Email and password formats acceptable", "INFO")
 
             # check if student already exists by email
             db = Database()
@@ -41,13 +42,13 @@ class Student:
                 (d for d in all_data.values() if d.get("email") == email), None
             )
             if existing:
-                utils.c_print(
-                    f"        Student {existing['name']} already exists", "ERROR"
+                c_print(
+                    f"{INDENT_LVL_1}Student {existing['name']} already exists", "ERROR"
                 )
                 return
 
-            name = input("        Name: ")
-            student_id = utils.randomize_student_id()
+            name = c_input(f"{INDENT_LVL_1}Name: ", "DEFAULT")
+            student_id = randomize_student_id()
 
             record = {
                 student_id: {
@@ -60,20 +61,20 @@ class Student:
                 }
             }
             db.add_record(record)
-            utils.c_print(f"        Enrolling Student {name}", "INFO")
+            c_print(f"{INDENT_LVL_1}Enrolling Student {name}", "INFO")
             return
 
     def _login(self):
-        utils.c_print("        Student Sign In", "SUCCESS")
+        c_print(f"{INDENT_LVL_1}Student Sign In", "SUCCESS")
         while True:
-            email = input("        Email: ")
-            password = input("        Password: ")
+            email = c_input(f"{INDENT_LVL_1}Email: ", "DEFAULT")
+            password = c_input(f"{INDENT_LVL_1}Password: ", "DEFAULT")
 
-            if not utils.validate_email(email) or not utils.validate_password(password):
-                utils.c_print("        Incorrect email or password format", "ERROR")
+            if not validate_email(email) or not validate_password(password):
+                c_print(f"{INDENT_LVL_1}Incorrect email or password format", "ERROR")
                 continue
 
-            utils.c_print("        email and password formats acceptable", "INFO")
+            c_print(f"{INDENT_LVL_1}Email and password formats acceptable", "INFO")
 
             db = Database()
             all_data = db.list_records({"list_all": True}) or {}
@@ -87,7 +88,7 @@ class Student:
             )
 
             if not match:
-                utils.c_print("        Student does not exist", "ERROR")
+                c_print(f"{INDENT_LVL_1}Student does not exist", "ERROR")
                 return
 
             student_id, _ = match
