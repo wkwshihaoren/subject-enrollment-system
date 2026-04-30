@@ -57,7 +57,7 @@ class EnrolmentController:
                 {"student_id": student_id, "enrolment": new_subject}
             )
             c_print(f"{INDENT_LVL_2}Enrolling in Subject-{subject_id}", "INFO")
-            c_print(f"{INDENT_LVL_2}You are now enrooled in {len(get_student_subject) + 1} out of 4 subjects", "INFO")
+            c_print(f"{INDENT_LVL_2}You are now enrolled in {len(get_student_subject) + 1} out of 4 subjects", "INFO")
 
             # re-calculated the overall mark and save
             new_get_student_data = self.database.list_records(
