@@ -90,10 +90,15 @@ class EnrolmentController:
 
         get_subject_id = c_input(f"{INDENT_LVL_2}Remove Subject by ID: ", "DEFAULT")
 
-        res_subject = self.database.remove_enrolment(
+        response = self.database.remove_enrolment(
             {"student_id": student_id, "subject_id": get_subject_id}
-        )[student_id]["enrolments"]
+        )
 
+        if not response: 
+            c_print(f"{INDENT_LVL_2}Subject {get_subject_id} does not exist", "ERROR")
+            return
+
+        res_subject = response[student_id]["enrolments"]
         len_subject = len(res_subject)
 
         c_print(f"{INDENT_LVL_2}Dropping Subject-{get_subject_id}", "INFO")
