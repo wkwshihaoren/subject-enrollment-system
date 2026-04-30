@@ -11,7 +11,9 @@ class UniversityController:
 
     def main_menu(self):
         while True:
-            user_input = c_input(f"{INDENT_LVL_0}University System: (A)dmin, (S)tudent, or X : ")
+            user_input = c_input(
+                f"{INDENT_LVL_0}University System: (A)dmin, (S)tudent, or X : "
+            )
 
             match user_input:
                 case "A":

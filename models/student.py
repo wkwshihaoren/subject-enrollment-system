@@ -1,4 +1,10 @@
-from utils import c_print, c_input, validate_email, validate_password, randomize_student_id
+from utils import (
+    c_print,
+    c_input,
+    validate_email,
+    validate_password,
+    randomize_student_id,
+)
 from constants import INDENT_LVL_1
 from models.database import Database
 from models.subject import Subject

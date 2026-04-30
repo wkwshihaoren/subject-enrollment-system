@@ -13,6 +13,6 @@ COLOURS = {
 
 RESET = "\033[0m"  # default white
 
-INDENT_LVL_0 =  " " * 0
-INDENT_LVL_1 =  " " * 8
-INDENT_LVL_2 =  " " * 16
+INDENT_LVL_0 = " " * 0
+INDENT_LVL_1 = " " * 8
+INDENT_LVL_2 = " " * 16

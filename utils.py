@@ -1,6 +1,6 @@
 import re
 import random
-from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET 
+from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET
 
 
 def c_print(text: str, type: str = RESET) -> None:

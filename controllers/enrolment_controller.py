@@ -1,6 +1,12 @@
 import re
 import constants
-from utils import c_print, c_input, randomize_subject_id, randomize_mark, calculate_grade_from_mark
+from utils import (
+    c_print,
+    c_input,
+    randomize_subject_id,
+    randomize_mark,
+    calculate_grade_from_mark,
+)
 from constants import INDENT_LVL_2
 from models.database import Database
 
@@ -20,7 +26,10 @@ class EnrolmentController:
                     confirm_new_password = c_input(f"{INDENT_LVL_2}Confirm Password: ")
 
                     if new_password != confirm_new_password:
-                        c_print( f"{INDENT_LVL_2}Password does not match - try again", "ERROR")
+                        c_print(
+                            f"{INDENT_LVL_2}Password does not match - try again",
+                            "ERROR",
+                        )
                     else:
                         self.database.update_password(
                             {"student_id": student_id, "new_password": new_password}
@@ -57,7 +66,10 @@ class EnrolmentController:
                 {"student_id": student_id, "enrolment": new_subject}
             )
             c_print(f"{INDENT_LVL_2}Enrolling in Subject-{subject_id}", "INFO")
-            c_print(f"{INDENT_LVL_2}You are now enrolled in {len(get_student_subject) + 1} out of 4 subjects", "INFO")
+            c_print(
+                f"{INDENT_LVL_2}You are now enrolled in {len(get_student_subject) + 1} out of 4 subjects",
+                "INFO",
+            )
 
             # re-calculated the overall mark and save
             new_get_student_data = self.database.list_records(
@@ -94,7 +106,7 @@ class EnrolmentController:
             {"student_id": student_id, "subject_id": get_subject_id}
         )
 
-        if not response: 
+        if not response:
             c_print(f"{INDENT_LVL_2}Subject {get_subject_id} does not exist", "ERROR")
             return
 
@@ -141,4 +153,6 @@ class EnrolmentController:
         c_print(f"{INDENT_LVL_2}Showing {len_subject} subjects", "INFO")
 
         for i in get_student_subject_data:
-            c_print(f"{INDENT_LVL_2}[ {i['subject_name']} :: {i['subject_id']} -- mark = {i['mark']} -- grade =  {i['grade']:>2} ]")
+            c_print(
+                f"{INDENT_LVL_2}[ {i['subject_name']} :: {i['subject_id']} -- mark = {i['mark']} -- grade =  {i['grade']:>2} ]"
+            )

@@ -1,4 +1,4 @@
-from utils import c_print, c_input 
+from utils import c_print, c_input
 from constants import INDENT_LVL_1, INDENT_LVL_2
 from models.database import Database
 
@@ -33,7 +33,9 @@ class AdminController:
             )
 
             for i in group_result:
-                c_print(f"{INDENT_LVL_1}{i[1]['overall_grade']} --> [{i[1]['name']} :: {i[0]} --> GRADE: {i[1]['overall_grade']} - MARK: {i[1]['average_mark']}]")
+                c_print(
+                    f"{INDENT_LVL_1}{i[1]['overall_grade']} --> [{i[1]['name']} :: {i[0]} --> GRADE: {i[1]['overall_grade']} - MARK: {i[1]['average_mark']}]"
+                )
 
     def partition_student(self):
         c_print(f"{INDENT_LVL_1}PASS/FAIL Partition", "INFO")
@@ -74,4 +76,6 @@ class AdminController:
             c_print(f"{INDENT_LVL_2}< Nothing to Display >")
         else:
             for sid, info in s_data.items():
-                c_print(f"{INDENT_LVL_1}{info['name']} :: {sid} --> Email: {info['email']}")
+                c_print(
+                    f"{INDENT_LVL_1}{info['name']} :: {sid} --> Email: {info['email']}"
+                )
