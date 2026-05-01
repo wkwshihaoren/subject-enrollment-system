@@ -3,18 +3,15 @@ import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
 
-# --------------------------------------------------
-# Make imports work even when this file is run from /gui
-# --------------------------------------------------
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-# Ensure data/students.data is created/read from project root
 os.chdir(PROJECT_ROOT)
 
 import utils
+from gui.exception_window import ExceptionWindow
 from models.database import Database
 
 
@@ -30,43 +27,6 @@ SUBJECT_CATALOG = {
 MAX_SUBJECTS = 4
 
 
-class ExceptionWindow(tk.Toplevel):
-    def __init__(self, parent: tk.Misc, message: str, title: str = "Exception Window"):
-        super().__init__(parent)
-
-        self.title(title)
-        self.geometry("380x170")
-        self.resizable(False, False)
-        self.transient(parent)
-        self.grab_set()
-
-        main_frame = ttk.Frame(self, padding=20)
-        main_frame.grid(row=0, column=0, sticky="nsew")
-
-        title_label = ttk.Label(
-            main_frame,
-            text=title,
-            font=("Times New Roman", 14, "bold"),
-            foreground="red",
-        )
-        title_label.grid(row=0, column=0, pady=(0, 10))
-
-        message_label = ttk.Label(
-            main_frame,
-            text=message,
-            wraplength=300,
-            justify="center",
-        )
-        message_label.grid(row=1, column=0, pady=(0, 15))
-
-        close_button = ttk.Button(
-            main_frame,
-            text="Close",
-            command=self.destroy,
-        )
-        close_button.grid(row=2, column=0)
-
-
 class EnrolmentWindow(tk.Toplevel):
     def __init__(self, parent: tk.Misc, student_id: str):
         super().__init__(parent)
@@ -76,10 +36,11 @@ class EnrolmentWindow(tk.Toplevel):
         self.database = Database()
 
         self.title("GUIUniApp - Enrolment Window")
-        self.geometry("500x420")
+        self.geometry("540x430")
         self.resizable(False, False)
 
         self.subject_codes = list(SUBJECT_CATALOG.keys())
+        self.subject_window = None
 
         self.create_widgets()
         self.refresh_status()
@@ -103,7 +64,7 @@ class EnrolmentWindow(tk.Toplevel):
                 "Select subject(s) to enrol.\n"
                 "A student can enrol in a maximum of four subjects."
             ),
-            wraplength=380,
+            wraplength=400,
             justify="center",
         )
         instruction_label.grid(row=1, column=0, pady=(0, 10))
@@ -146,19 +107,26 @@ class EnrolmentWindow(tk.Toplevel):
         )
         enrol_button.grid(row=0, column=0, padx=5)
 
+        show_button = ttk.Button(
+            button_frame,
+            text="Show Subjects",
+            command=self.show_subjects,
+        )
+        show_button.grid(row=0, column=1, padx=5)
+
         clear_button = ttk.Button(
             button_frame,
             text="Clear Selection",
             command=self.clear_selection,
         )
-        clear_button.grid(row=0, column=1, padx=5)
+        clear_button.grid(row=0, column=2, padx=5)
 
         close_button = ttk.Button(
             button_frame,
             text="Close",
             command=self.close_window,
         )
-        close_button.grid(row=0, column=2, padx=5)
+        close_button.grid(row=0, column=3, padx=5)
 
     def get_student(self) -> dict | None:
         data = self.database.list_records({"student_id": self.student_id}) or {}
@@ -190,6 +158,16 @@ class EnrolmentWindow(tk.Toplevel):
 
     def clear_selection(self):
         self.subject_listbox.selection_clear(0, tk.END)
+
+    def show_subjects(self):
+        from gui.subject_window import SubjectWindow
+
+        if self.subject_window is not None and self.subject_window.winfo_exists():
+            self.subject_window.lift()
+            self.subject_window.refresh_rows()
+            return
+
+        self.subject_window = SubjectWindow(self, self.student_id)
 
     def enrol_selected(self):
         student = self.get_student()
@@ -256,6 +234,9 @@ class EnrolmentWindow(tk.Toplevel):
         self.update_average_and_grade()
         self.refresh_status()
         self.clear_selection()
+
+        if self.subject_window is not None and self.subject_window.winfo_exists():
+            self.subject_window.refresh_rows()
 
         messagebox.showinfo(
             "Enrolment Successful",
