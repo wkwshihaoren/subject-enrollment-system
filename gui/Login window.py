@@ -179,20 +179,13 @@ class LoginWindow(tk.Tk):
             "Login Error",
         )
 
-    def open_enrolment_window(self, student_id: str):
-        self.clear_fields()
-        self.withdraw()
+def open_enrolment_window(self, student_id: str):
+    self.clear_fields()
+    self.withdraw()
 
-        # Later, when EnrolmentWindow is ready, use:
-        #
-        # from gui_enrolment import EnrolmentWindow
-        # EnrolmentWindow(self, student_id)
+    from gui.enrolment_window import EnrolmentWindow
 
-        ExceptionWindow(
-            self,
-            f"Login successful.\nStudent ID: {student_id}\n\nNext: open Enrolment Window.",
-            "Login Successful",
-        )
+    EnrolmentWindow(self, student_id)
 
     def clear_fields(self):
         self.email_var.set("")
