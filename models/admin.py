@@ -31,4 +31,4 @@ class Admin:
                     break
 
                 case _:
-                    c_print(f"{INDENT_LVL_1}Invalid input")
+                    c_print(f"{INDENT_LVL_1}Invalid input", "ERROR")
