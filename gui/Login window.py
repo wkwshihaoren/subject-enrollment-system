@@ -1,5 +1,12 @@
+import os
+import sys
 import tkinter as tk
 from tkinter import ttk
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
 
 import utils
 from models.database import Database
@@ -192,6 +199,10 @@ class LoginWindow(tk.Tk):
         self.password_var.set("")
         self.email_entry.focus()
 
+
+if __name__ == "__main__":
+    app = LoginWindow()
+    app.mainloop()
 
 if __name__ == "__main__":
     app = LoginWindow()
