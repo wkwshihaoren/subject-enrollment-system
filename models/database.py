@@ -21,7 +21,6 @@ class Database:
     # Add new student record on register
     def add_record(self, input_data) -> str | None:
         try:
-            # Read existing data first
             with open(self.data_file_path, "rb") as file:
                 existing_data = pickle.load(file)
 
@@ -55,7 +54,6 @@ class Database:
                 student_data["enrolments"] = enrolments
                 data[student_id] = student_data
 
-            # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
 
@@ -101,7 +99,6 @@ class Database:
                 student_data["password"] = new_password
                 data[student_id] = student_data
 
-            # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
         except Exception as e:
@@ -123,7 +120,9 @@ class Database:
 
                 enrolments = student_data.get("enrolments", [])
 
-                # Removal process: only keep enrolments that do not match the subject_id to be removed
+                if not any(e.get("subject_id") == subject_id for e in enrolments):
+                    return
+
                 updated_enrolments = [
                     enrolment
                     for enrolment in enrolments
@@ -133,7 +132,6 @@ class Database:
                 student_data["enrolments"] = updated_enrolments
                 data[student_id] = student_data
 
-            # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
 
@@ -187,7 +185,6 @@ class Database:
                 student_data["overall_grade"] = get_overall_grade
                 data[student_id] = student_data
 
-            # Write the updated data back to the file
             with open(self.data_file_path, "wb") as file:
                 pickle.dump(data, file)
         except Exception as e:

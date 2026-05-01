@@ -1,6 +1,7 @@
 from models.admin import Admin
 from models.student import Student
-import utils
+from utils import c_input, c_print
+from constants import INDENT_LVL_0
 
 
 class UniversityController:
@@ -10,7 +11,9 @@ class UniversityController:
 
     def main_menu(self):
         while True:
-            user_input = utils.c_input("University System: (A)dmin, (S)tudent, or X : ")
+            user_input = c_input(
+                f"{INDENT_LVL_0}University System: (A)dmin, (S)tudent, or X : "
+            )
 
             match user_input:
                 case "A":
@@ -18,7 +21,7 @@ class UniversityController:
                 case "S":
                     self.student.s_menu()
                 case "X":
-                    utils.c_print("Thank You", "INFO")
+                    c_print(f"{INDENT_LVL_0}Thank You", "INFO")
                     break
                 case _:
-                    utils.c_print("Invalid Input", "ERROR")
+                    c_print(f"{INDENT_LVL_0}Invalid Input", "ERROR")

@@ -9,7 +9,7 @@ Group number:Jingxiang Wang, Jason Maharjan, Miki Hayashi, Aditya Maurya.
 2. Admin, Admin Controller -> Jingxiang
 3. Subject (+Enrolment), Subject Controller -> Jinxiang
 4. Database -> Jason 
-5. Utilities (Regex Validation, Id and Mark generators, Log Formatters, Grade calculator) -> Jason
+5. Utilities (Regex Validation, Id and Mark generators, Log Formatters, Grade calculator), Cleanup -> Jason
 6. GUI -> Miki
 
 ## Setting up Dev Environment
@@ -33,18 +33,14 @@ pip install -r requirements.txt
 ruff check . && ruff format .
 ```
 
-## Coloured Printing
+## Printing and Input
 
-For colour prints, use the c_print function imported from `utility.py` along with the log level as shown in the example:
+We use custom `c_print` and `c_input` functions to use coloured prints and inputs according to the required log type, and indentation levels. Example:
 ```bash
-c_print("This is a success message", "SUCCESS")
+c_print(f"{INDENT_LEVEL_0}This is a success message", "SUCCESS")
 ```
-
-## Coloured Input
-
-For coloured inputs, just use the `c_input` function. This displays the input using the required colour.
 ```bash
-c_input("This is a prompt")
+c_input(f"{INDENT_LEVEL_1}This is an input prompt", "WARN")
 ```
 ## Data schema
 ```json

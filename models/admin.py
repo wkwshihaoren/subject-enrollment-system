@@ -1,5 +1,6 @@
 import controllers.admin_controller
-import utils
+from utils import c_print, c_input
+from constants import INDENT_LVL_1
 
 
 class Admin:
@@ -8,7 +9,7 @@ class Admin:
 
     def a_menu(self):
         while True:
-            s_input = utils.c_input("        Admin System (c/g/p/r/s/x) :").lower()
+            s_input = c_input(f"{INDENT_LVL_1}Admin System (c/g/p/r/s/x): ").lower()
 
             match s_input:
                 case "c":
@@ -30,4 +31,4 @@ class Admin:
                     break
 
                 case _:
-                    print("Invalid input")
+                    c_print(f"{INDENT_LVL_1}Invalid input")

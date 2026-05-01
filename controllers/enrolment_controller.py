@@ -1,6 +1,13 @@
 import re
 import constants
-import utils
+from utils import (
+    c_print,
+    c_input,
+    randomize_subject_id,
+    randomize_mark,
+    calculate_grade_from_mark,
+)
+from constants import INDENT_LVL_2
 from models.database import Database
 
 
@@ -10,17 +17,17 @@ class EnrolmentController:
 
     # student_enrolment_menu
     def change_pass(self, student_id):
-        utils.c_print("Updating Password", "INFO")
+        c_print(f"{INDENT_LVL_2}Updating Password", "INFO")
         while True:
-            new_password = input("                New Password: ")
+            new_password = c_input(f"{INDENT_LVL_2}New Password: ")
 
             if re.match(constants.PASSWORD_REGEX, new_password):
                 while True:
-                    confirm_new_password = input("                Confirm Password: ")
+                    confirm_new_password = c_input(f"{INDENT_LVL_2}Confirm Password: ")
 
                     if new_password != confirm_new_password:
-                        utils.c_print(
-                            "                Password does not match - try again",
+                        c_print(
+                            f"{INDENT_LVL_2}Password does not match - try again",
                             "ERROR",
                         )
                     else:
@@ -30,7 +37,7 @@ class EnrolmentController:
                         break
                 break
             else:
-                utils.c_print("                Incorrect password format", "ERROR")
+                c_print(f"{INDENT_LVL_2}Incorrect password format", "ERROR")
 
     def enrol(self, student_id):
 
@@ -44,24 +51,23 @@ class EnrolmentController:
         if len(get_student_subject) < 4:
             # Generate non-repetitive subject_id
             while True:
-                subject_id = utils.randomize_subject_id()
+                subject_id = randomize_subject_id()
                 if subject_id not in get_student_subject:
                     break
 
-            radom_mark = utils.randomize_mark()
+            radom_mark = randomize_mark()
             new_subject = {
                 "subject_name": "Subject",
                 "subject_id": subject_id,
                 "mark": radom_mark,
-                "grade": utils.calculate_grade_from_mark(radom_mark),
+                "grade": calculate_grade_from_mark(radom_mark),
             }
-            # print(new_subject)
             self.database.add_enrolment(
                 {"student_id": student_id, "enrolment": new_subject}
             )
-            utils.c_print(f"                Enrolling in Subject-{subject_id}", "INFO")
-            utils.c_print(
-                f"                You are now enrooled in {len(get_student_subject) + 1} out of 4 subjects",
+            c_print(f"{INDENT_LVL_2}Enrolling in Subject-{subject_id}", "INFO")
+            c_print(
+                f"{INDENT_LVL_2}You are now enrolled in {len(get_student_subject) + 1} out of 4 subjects",
                 "INFO",
             )
 
@@ -77,7 +83,7 @@ class EnrolmentController:
                 average_mark = round(
                     sum(get_all_subject_grade) / len(get_all_subject_grade), 2
                 )
-                overall_grade = utils.calculate_grade_from_mark(round(average_mark))
+                overall_grade = calculate_grade_from_mark(round(average_mark))
 
             self.database.update_mark_grade(
                 {
@@ -87,25 +93,30 @@ class EnrolmentController:
                 }
             )
         else:
-            utils.c_print(
-                "                Student are allowed to enrol in 4 subjects only",
+            c_print(
+                f"{INDENT_LVL_2}Student are allowed to enrol in 4 subjects only",
                 "ERROR",
             )
 
     def remove(self, student_id):
 
-        get_subject_id = input("                Remove Subject by ID:")
+        get_subject_id = c_input(f"{INDENT_LVL_2}Remove Subject by ID: ", "DEFAULT")
 
-        res_subject = self.database.remove_enrolment(
+        response = self.database.remove_enrolment(
             {"student_id": student_id, "subject_id": get_subject_id}
-        )[student_id]["enrolments"]
+        )
 
+        if not response:
+            c_print(f"{INDENT_LVL_2}Subject {get_subject_id} does not exist", "ERROR")
+            return
+
+        res_subject = response[student_id]["enrolments"]
         len_subject = len(res_subject)
 
-        utils.c_print(f"                Droping Subject-{get_subject_id}", "INFO")
+        c_print(f"{INDENT_LVL_2}Dropping Subject-{get_subject_id}", "INFO")
 
-        utils.c_print(
-            f"                You are now enrolled in {len_subject} out of 4 subjects",
+        c_print(
+            f"{INDENT_LVL_2}You are now enrolled in {len_subject} out of 4 subjects",
             "INFO",
         )
 
@@ -122,7 +133,7 @@ class EnrolmentController:
             average_mark = round(
                 sum(get_all_subject_grade) / len(get_all_subject_grade), 2
             )
-        overall_grade = utils.calculate_grade_from_mark(round(average_mark))
+        overall_grade = calculate_grade_from_mark(round(average_mark))
 
         self.database.update_mark_grade(
             {
@@ -139,9 +150,9 @@ class EnrolmentController:
         )[student_id]["enrolments"]
         len_subject = len(get_student_subject_data)
 
-        utils.c_print(f"                Showing {len_subject} subjects", "INFO")
+        c_print(f"{INDENT_LVL_2}Showing {len_subject} subjects", "INFO")
 
         for i in get_student_subject_data:
-            print(
-                f"                [ {i['subject_name']} :: {i['subject_id']} -- mark = {i['mark']} -- grade = {i['grade']} ]"
+            c_print(
+                f"{INDENT_LVL_2}[ {i['subject_name']} :: {i['subject_id']} -- mark = {i['mark']} -- grade =  {i['grade']:>2} ]"
             )
