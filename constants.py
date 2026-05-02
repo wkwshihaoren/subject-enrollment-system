@@ -20,7 +20,7 @@ INDENT_LVL_0 = " " * 0
 INDENT_LVL_1 = " " * 8
 INDENT_LVL_2 = " " * 16
 
-LOGIN_WINDOW = { "width": 540, "height": 320}
+LOGIN_WINDOW = {"width": 540, "height": 320}
 
 SUBJECT_WINDOW = {"width": 560, "height": 380}
 

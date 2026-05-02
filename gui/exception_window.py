@@ -2,7 +2,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import ttk
-from constants import LOGIN_WINDOW, EXCEPTION_WINDOW
+from constants import EXCEPTION_WINDOW
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

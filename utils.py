@@ -5,6 +5,7 @@ from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET, MAX_SUBJECT_C
 
 database = db.Database()
 
+
 def c_print(text: str, type: str = RESET) -> None:
     colour = COLOURS.get(type, RESET)
     print(f"{colour}{text}{RESET}" if colour else text)
@@ -29,14 +30,17 @@ def randomize_subject_id() -> str:
         if new_id not in existing_ids:
             return new_id
 
+
 def randomize_subject_catalog() -> dict:
     return {
         randomize_subject_id(): f"Subject {i + 1}"
         for i in range(0, MAX_SUBJECT_CALALOG)
     }
 
+
 def randomize_mark() -> int:
     return random.randint(25, 100)
+
 
 def randomize_student_id() -> str:
     records = database.list_records({"list_all": True})
@@ -51,6 +55,7 @@ def randomize_student_id() -> str:
         new_id = str(random.randint(1, 999999)).zfill(6)
         if new_id not in existing_ids:
             return new_id
+
 
 def calculate_grade_from_mark(mark: int) -> str:
     if not isinstance(mark, (int, float)):

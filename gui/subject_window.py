@@ -1,9 +1,10 @@
-
 import os
 import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
 from gui.exception_window import ExceptionWindow
+from models.database import Database
+from constants import SUBJECT_WINDOW
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -11,9 +12,6 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 os.chdir(PROJECT_ROOT)
-
-from models.database import Database
-from constants import SUBJECT_WINDOW 
 
 
 class SubjectWindow(tk.Toplevel):
@@ -25,7 +23,7 @@ class SubjectWindow(tk.Toplevel):
         self.database = Database()
 
         self.title("GUIUniApp - Subject Window")
-        self.geometry(f"{SUBJECT_WINDOW.get("width")}x{SUBJECT_WINDOW.get("height")}")
+        self.geometry(f"{SUBJECT_WINDOW.get('width')}x{SUBJECT_WINDOW.get('height')}")
         self.resizable(False, False)
 
         self.create_widgets()
@@ -172,10 +170,9 @@ class SubjectWindow(tk.Toplevel):
             )
             return
 
-        self.database.remove_enrolment({
-            "student_id": self.student_id,
-            "subject_id": subject_id
-        })
+        self.database.remove_enrolment(
+            {"student_id": self.student_id, "subject_id": subject_id}
+        )
 
         messagebox.showinfo(
             "Unenrollment Successful",

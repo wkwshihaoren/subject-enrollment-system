@@ -1,6 +1,9 @@
 import os
 import sys
+import utils
 import tkinter as tk
+from gui.exception_window import ExceptionWindow
+from models.database import Database
 from tkinter import ttk
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -9,10 +12,6 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 os.chdir(PROJECT_ROOT)
-
-import utils
-from gui.exception_window import ExceptionWindow
-from models.database import Database
 
 
 class LoginWindow(tk.Tk):
@@ -172,4 +171,3 @@ class LoginWindow(tk.Tk):
 if __name__ == "__main__":
     app = LoginWindow()
     app.mainloop()
-

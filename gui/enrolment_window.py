@@ -1,7 +1,11 @@
 import os
 import sys
+import utils
 import tkinter as tk
 from tkinter import ttk, messagebox
+from gui.exception_window import ExceptionWindow
+from models.database import Database
+from constants import MAX_ENROLMENTS
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -10,10 +14,6 @@ if PROJECT_ROOT not in sys.path:
 
 os.chdir(PROJECT_ROOT)
 
-import utils
-from gui.exception_window import ExceptionWindow
-from models.database import Database
-from constants import MAX_ENROLMENTS
 
 class EnrolmentWindow(tk.Toplevel):
     def __init__(self, parent: tk.Misc, student_id: str):
@@ -27,7 +27,7 @@ class EnrolmentWindow(tk.Toplevel):
         self.geometry("540x430")
         self.resizable(False, False)
 
-        self.SUBJECT_CATALOG = utils.randomize_subject_catalog() 
+        self.SUBJECT_CATALOG = utils.randomize_subject_catalog()
         self.subject_codes = list(self.SUBJECT_CATALOG.keys())
         self.subject_window = None
 
@@ -141,9 +141,7 @@ class EnrolmentWindow(tk.Toplevel):
             f"Average Mark: {average_mark}\t\tOverall Grade: {overall_grade}"
         )
 
-        self.status_var.set(
-            f"Enrollment status: {len(enrolments)}/{MAX_ENROLMENTS}"
-        )
+        self.status_var.set(f"Enrollment status: {len(enrolments)}/{MAX_ENROLMENTS}")
 
     def clear_selection(self):
         self.subject_listbox.selection_clear(0, tk.END)
@@ -181,9 +179,7 @@ class EnrolmentWindow(tk.Toplevel):
             return
 
         enrolments = student.get("enrolments", [])
-        existing_subject_ids = {
-            subject.get("subject_id") for subject in enrolments
-        }
+        existing_subject_ids = {subject.get("subject_id") for subject in enrolments}
 
         for code in selected_codes:
             if code in existing_subject_ids:
