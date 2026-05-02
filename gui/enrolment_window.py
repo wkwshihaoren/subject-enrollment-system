@@ -1,7 +1,11 @@
 import os
 import sys
+import utils
 import tkinter as tk
 from tkinter import ttk, messagebox
+from gui.exception_window import ExceptionWindow
+from models.database import Database
+from constants import MAX_ENROLMENTS
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,22 +13,6 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 os.chdir(PROJECT_ROOT)
-
-import utils
-from gui.exception_window import ExceptionWindow
-from models.database import Database
-
-
-SUBJECT_CATALOG = {
-    "541": "subject1",
-    "534": "subject2",
-    "525": "subject3",
-    "565": "subject4",
-    "570": "subject5",
-    "580": "subject6",
-}
-
-MAX_SUBJECTS = 4
 
 
 class EnrolmentWindow(tk.Toplevel):
@@ -39,7 +27,8 @@ class EnrolmentWindow(tk.Toplevel):
         self.geometry("540x430")
         self.resizable(False, False)
 
-        self.subject_codes = list(SUBJECT_CATALOG.keys())
+        self.SUBJECT_CATALOG = utils.randomize_subject_catalog()
+        self.subject_codes = list(self.SUBJECT_CATALOG.keys())
         self.subject_window = None
 
         self.create_widgets()
@@ -53,7 +42,7 @@ class EnrolmentWindow(tk.Toplevel):
 
         title_label = ttk.Label(
             main_frame,
-            text="Subject Enrolment System",
+            text="Subjects Catalog",
             font=("Times New Roman", 16, "bold"),
         )
         title_label.grid(row=0, column=0, pady=(0, 10))
@@ -89,12 +78,12 @@ class EnrolmentWindow(tk.Toplevel):
             main_frame,
             selectmode=tk.MULTIPLE,
             width=42,
-            height=8,
+            height=10,
             exportselection=False,
         )
         self.subject_listbox.grid(row=4, column=0, pady=(0, 15))
 
-        for code, name in SUBJECT_CATALOG.items():
+        for code, name in self.SUBJECT_CATALOG.items():
             self.subject_listbox.insert(tk.END, f"{code} - {name}")
 
         button_frame = ttk.Frame(main_frame)
@@ -123,7 +112,7 @@ class EnrolmentWindow(tk.Toplevel):
 
         close_button = ttk.Button(
             button_frame,
-            text="Close",
+            text="Logout",
             command=self.close_window,
         )
         close_button.grid(row=0, column=3, padx=5)
@@ -147,14 +136,12 @@ class EnrolmentWindow(tk.Toplevel):
         overall_grade = student.get("overall_grade", "F")
 
         self.student_info_var.set(
-            f"Student: {name}    ID: {self.student_id}\n"
+            f"Student: {name}\t\tID: {self.student_id}\n"
             f"Email: {email}\n"
-            f"Average Mark: {average_mark}    Overall Grade: {overall_grade}"
+            f"Average Mark: {average_mark}\t\tOverall Grade: {overall_grade}"
         )
 
-        self.status_var.set(
-            f"Currently enrolled: {len(enrolments)}/{MAX_SUBJECTS}"
-        )
+        self.status_var.set(f"Enrollment status: {len(enrolments)}/{MAX_ENROLMENTS}")
 
     def clear_selection(self):
         self.subject_listbox.selection_clear(0, tk.END)
@@ -192,9 +179,7 @@ class EnrolmentWindow(tk.Toplevel):
             return
 
         enrolments = student.get("enrolments", [])
-        existing_subject_ids = {
-            subject.get("subject_id") for subject in enrolments
-        }
+        existing_subject_ids = {subject.get("subject_id") for subject in enrolments}
 
         for code in selected_codes:
             if code in existing_subject_ids:
@@ -205,7 +190,7 @@ class EnrolmentWindow(tk.Toplevel):
                 )
                 return
 
-        if len(enrolments) + len(selected_codes) > MAX_SUBJECTS:
+        if len(enrolments) + len(selected_codes) > MAX_ENROLMENTS:
             ExceptionWindow(
                 self,
                 "You can only enrol in up to 4 subjects.",
@@ -218,7 +203,7 @@ class EnrolmentWindow(tk.Toplevel):
             grade = utils.calculate_grade_from_mark(mark)
 
             new_subject = {
-                "subject_name": SUBJECT_CATALOG[code],
+                "subject_name": self.SUBJECT_CATALOG[code],
                 "subject_id": code,
                 "mark": mark,
                 "grade": grade,

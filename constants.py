@@ -1,6 +1,9 @@
 EMAIL_REGEX = r"^[a-zA-Z0-9]+\.[a-zA-Z0-9]+@university\.com$"
-PASSWORD_REGEX = r"^[A-Z][A-Za-z]{4,}\d{3,}$"
+PASSWORD_REGEX = r"^[A-Z][A-Za-z]{5,}\d{3,}$"
 DATA_FILE = "data/students.data"
+
+MAX_ENROLMENTS = 4
+MAX_SUBJECT_CALALOG = 10
 
 COLOURS = {
     "DEFAULT": "\033[37m",  # white
@@ -16,3 +19,9 @@ RESET = "\033[0m"  # default white
 INDENT_LVL_0 = " " * 0
 INDENT_LVL_1 = " " * 8
 INDENT_LVL_2 = " " * 16
+
+LOGIN_WINDOW = {"width": 540, "height": 320}
+
+SUBJECT_WINDOW = {"width": 560, "height": 380}
+
+EXCEPTION_WINDOW = {"width": 300, "height": 180}

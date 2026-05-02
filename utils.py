@@ -1,6 +1,9 @@
 import re
 import random
-from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET
+import models.database as db
+from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET, MAX_SUBJECT_CALALOG
+
+database = db.Database()
 
 
 def c_print(text: str, type: str = RESET) -> None:
@@ -21,7 +24,18 @@ def validate_password(password: str) -> bool:
 
 
 def randomize_subject_id() -> str:
-    return str(random.randint(1, 999)).zfill(3)
+    existing_ids = set(database.list_records({"list_all": True}).keys())
+    while True:
+        new_id = str(random.randint(1, 999)).zfill(3)
+        if new_id not in existing_ids:
+            return new_id
+
+
+def randomize_subject_catalog() -> dict:
+    return {
+        randomize_subject_id(): f"Subject {i + 1}"
+        for i in range(0, MAX_SUBJECT_CALALOG)
+    }
 
 
 def randomize_mark() -> int:
@@ -29,7 +43,18 @@ def randomize_mark() -> int:
 
 
 def randomize_student_id() -> str:
-    return str(random.randint(1, 999999)).zfill(6)
+    records = database.list_records({"list_all": True})
+
+    existing_ids = {
+        enrolment["subject_id"]
+        for student in records.values()
+        for enrolment in student.get("enrolments", [])
+    }
+
+    while True:
+        new_id = str(random.randint(1, 999999)).zfill(6)
+        if new_id not in existing_ids:
+            return new_id
 
 
 def calculate_grade_from_mark(mark: int) -> str:

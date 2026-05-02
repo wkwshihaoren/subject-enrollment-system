@@ -2,6 +2,7 @@ import os
 import sys
 import tkinter as tk
 from tkinter import ttk
+from constants import EXCEPTION_WINDOW
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -14,10 +15,19 @@ class ExceptionWindow(tk.Toplevel):
         super().__init__(parent)
 
         self.title(title)
-        self.geometry("390x180")
+        width, height = EXCEPTION_WINDOW.get("width"), EXCEPTION_WINDOW.get("height")
         self.resizable(False, False)
         self.transient(parent)
         self.grab_set()
+
+        parent.update_idletasks()
+        parent_x = parent.winfo_rootx()
+        parent_y = parent.winfo_rooty()
+        parent_w = parent.winfo_width()
+        parent_h = parent.winfo_height()
+        x = parent_x + (parent_w - width) // 2
+        y = parent_y + (parent_h - height) // 2
+        self.geometry(f"{width}x{height}+{x}+{y}")
 
         main_frame = ttk.Frame(self, padding=20)
         main_frame.grid(row=0, column=0, sticky="nsew")

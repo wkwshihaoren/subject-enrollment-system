@@ -1,8 +1,10 @@
-
 import os
 import sys
 import tkinter as tk
-from tkinter import ttk
+from tkinter import ttk, messagebox
+from gui.exception_window import ExceptionWindow
+from models.database import Database
+from constants import SUBJECT_WINDOW
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -10,8 +12,6 @@ if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
 os.chdir(PROJECT_ROOT)
-
-from models.database import Database
 
 
 class SubjectWindow(tk.Toplevel):
@@ -23,7 +23,7 @@ class SubjectWindow(tk.Toplevel):
         self.database = Database()
 
         self.title("GUIUniApp - Subject Window")
-        self.geometry("560x380")
+        self.geometry(f"{SUBJECT_WINDOW.get('width')}x{SUBJECT_WINDOW.get('height')}")
         self.resizable(False, False)
 
         self.create_widgets()
@@ -79,12 +79,19 @@ class SubjectWindow(tk.Toplevel):
         )
         refresh_button.grid(row=0, column=0, padx=5)
 
+        unenroll_button = ttk.Button(
+            button_frame,
+            text="Unenroll",
+            command=self.unenroll_selected,
+        )
+        unenroll_button.grid(row=0, column=1, padx=5)
+
         close_button = ttk.Button(
             button_frame,
             text="Close",
             command=self.destroy,
         )
-        close_button.grid(row=0, column=1, padx=5)
+        close_button.grid(row=0, column=2, padx=5)
 
     def get_student(self) -> dict | None:
         data = self.database.list_records({"student_id": self.student_id}) or {}
@@ -131,3 +138,45 @@ class SubjectWindow(tk.Toplevel):
                     subject.get("grade", ""),
                 ),
             )
+
+    def unenroll_selected(self):
+        selected_item = self.tree.selection()
+
+        if not selected_item:
+            ExceptionWindow(
+                self,
+                "Please select a subject to unenroll from.",
+                "Selection Error",
+            )
+            return
+
+        subject_id = self.tree.item(selected_item, "values")[0]
+
+        if not subject_id:
+            ExceptionWindow(
+                self,
+                "Unable to unenroll from the selected subject.",
+                "Unenroll Error",
+            )
+            return
+
+        student = self.get_student()
+
+        if student is None:
+            ExceptionWindow(
+                self,
+                "Student data could not be found.",
+                "Data Error",
+            )
+            return
+
+        self.database.remove_enrolment(
+            {"student_id": self.student_id, "subject_id": subject_id}
+        )
+
+        messagebox.showinfo(
+            "Unenrollment Successful",
+            "Subject removed from student's enrolments.",
+        )
+
+        self.refresh_rows()

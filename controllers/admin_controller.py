@@ -10,7 +10,10 @@ class AdminController:
     def format_database(self):
         c_print(f"{INDENT_LVL_1}Clearing sudents database", "INFO")
 
-        a_input = c_input(f"{INDENT_LVL_1}Are you sure you want to clear the database (Y)ES/(N)O: ", "INPUT_WARN")
+        a_input = c_input(
+            f"{INDENT_LVL_1}Are you sure you want to clear the database (Y)ES/(N)O: ",
+            "INPUT_WARN",
+        )
 
         if a_input == "Y":
             self.database.remove_records({"remove_all": True})
