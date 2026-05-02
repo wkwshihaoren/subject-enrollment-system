@@ -22,7 +22,11 @@ class LoginWindow(tk.Tk):
         self.database = Database()
 
         self.title("GUIUniApp - Login Window")
-        self.geometry("540x320")
+        width, height = 540, 320
+        self.update_idletasks()
+        x = (self.winfo_screenwidth() - width) // 2
+        y = (self.winfo_screenheight() - height) // 2
+        self.geometry(f"{width}x{height}+{x}+{y}")
         self.resizable(False, False)
 
         self.email_var = tk.StringVar()
@@ -31,12 +35,17 @@ class LoginWindow(tk.Tk):
         self.create_widgets()
 
     def create_widgets(self):
+        self.grid_rowconfigure(0, weight=1)
+        self.grid_columnconfigure(0, weight=1)
+
         main_frame = ttk.Frame(self, padding=20)
-        main_frame.grid(row=0, column=0, sticky="nsew")
+        main_frame.grid(row=0, column=0)
+        main_frame.grid_columnconfigure(0, weight=1)
+        main_frame.grid_columnconfigure(1, weight=1)
 
         title_label = ttk.Label(
             main_frame,
-            text="Login Window",
+            text="Login",
             font=("Times New Roman", 18, "bold"),
         )
         title_label.grid(row=0, column=0, columnspan=2, pady=(0, 10))
@@ -117,7 +126,7 @@ class LoginWindow(tk.Tk):
         if not utils.validate_email(email):
             ExceptionWindow(
                 self,
-                "Incorrect email format.\nUse firstname.lastname@university.com.",
+                "Incorrect email format.\nUse: firstname.lastname@university.com.",
                 "Login Error",
             )
             return

@@ -12,6 +12,7 @@ if PROJECT_ROOT not in sys.path:
 os.chdir(PROJECT_ROOT)
 
 from models.database import Database
+from constants import SUBJECT_WINDOW 
 
 
 class SubjectWindow(tk.Toplevel):
@@ -23,7 +24,7 @@ class SubjectWindow(tk.Toplevel):
         self.database = Database()
 
         self.title("GUIUniApp - Subject Window")
-        self.geometry("560x380")
+        self.geometry(f"{SUBJECT_WINDOW.get("width")}x{SUBJECT_WINDOW.get("height")}")
         self.resizable(False, False)
 
         self.create_widgets()
