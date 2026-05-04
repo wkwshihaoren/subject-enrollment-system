@@ -1,18 +1,9 @@
-import os
-import sys
 import utils
 import tkinter as tk
 from tkinter import ttk, messagebox
 from gui.exception_window import ExceptionWindow
 from models.database import Database
 from constants import MAX_ENROLMENTS
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-os.chdir(PROJECT_ROOT)
 
 
 class EnrolmentWindow(tk.Toplevel):
@@ -110,12 +101,19 @@ class EnrolmentWindow(tk.Toplevel):
         )
         clear_button.grid(row=0, column=2, padx=5)
 
-        close_button = ttk.Button(
+        refresh_button = ttk.Button(
             button_frame,
-            text="Logout",
-            command=self.close_window,
+            text="Refresh",
+            command=self.refresh_status,
         )
-        close_button.grid(row=0, column=3, padx=5)
+        refresh_button.grid(row=0, column=3, padx=5)
+
+        # close_button = ttk.Button(
+        #     button_frame,
+        #     text="Logout",
+        #     command=self.close_window,
+        # )
+        # close_button.grid(row=0, column=4, padx=5)
 
     def get_student(self) -> dict | None:
         data = self.database.list_records({"student_id": self.student_id}) or {}
@@ -145,6 +143,16 @@ class EnrolmentWindow(tk.Toplevel):
 
     def clear_selection(self):
         self.subject_listbox.selection_clear(0, tk.END)
+
+    # def refresh_rows(self):
+    #     # self.SUBJECT_CATALOG = utils.randomize_subject_catalog()
+    #     # self.subject_codes = list(self.SUBJECT_CATALOG.keys())
+
+    #     self.subject_listbox.delete(0, tk.END)
+    #     for code, name in self.SUBJECT_CATALOG.items():
+    #         self.subject_listbox.insert(tk.END, f"{code} - {name}")
+
+    #     self.refresh_status()
 
     def show_subjects(self):
         from gui.subject_window import SubjectWindow

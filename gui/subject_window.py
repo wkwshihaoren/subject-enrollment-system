@@ -1,17 +1,9 @@
-import os
-import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
+import utils
 from gui.exception_window import ExceptionWindow
 from models.database import Database
 from constants import SUBJECT_WINDOW
-
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
-
-os.chdir(PROJECT_ROOT)
 
 
 class SubjectWindow(tk.Toplevel):
@@ -81,7 +73,7 @@ class SubjectWindow(tk.Toplevel):
 
         unenroll_button = ttk.Button(
             button_frame,
-            text="Unenroll",
+            text="Withdraw",
             command=self.unenroll_selected,
         )
         unenroll_button.grid(row=0, column=1, padx=5)
@@ -174,9 +166,35 @@ class SubjectWindow(tk.Toplevel):
             {"student_id": self.student_id, "subject_id": subject_id}
         )
 
+        self.update_average_and_grade()
+
         messagebox.showinfo(
             "Unenrollment Successful",
             "Subject removed from student's enrolments.",
         )
 
         self.refresh_rows()
+
+    def update_average_and_grade(self):
+        student = self.get_student()
+
+        if student is None:
+            return
+
+        enrolments = student.get("enrolments", [])
+
+        if not enrolments:
+            average_mark = 0
+        else:
+            marks = [subject.get("mark", 0) for subject in enrolments]
+            average_mark = round(sum(marks) / len(marks), 2)
+
+        overall_grade = utils.calculate_grade_from_mark(round(average_mark))
+
+        self.database.update_mark_grade(
+            {
+                "student_id": self.student_id,
+                "get_average_mark": average_mark,
+                "get_overall_grade": overall_grade,
+            }
+        )
