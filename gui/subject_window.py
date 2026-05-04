@@ -52,12 +52,10 @@ class SubjectWindow(tk.Toplevel):
         self.tree.grid(row=2, column=0, pady=(0, 12))
 
         self.tree.heading("subject_id", text="Subject ID")
-        self.tree.heading("subject_name", text="Subject")
         self.tree.heading("mark", text="Mark")
         self.tree.heading("grade", text="Grade")
 
         self.tree.column("subject_id", width=100, anchor="center")
-        self.tree.column("subject_name", width=200, anchor="w")
         self.tree.column("mark", width=90, anchor="center")
         self.tree.column("grade", width=90, anchor="center")
 

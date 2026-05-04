@@ -3,7 +3,6 @@ PASSWORD_REGEX = r"^[A-Z][A-Za-z]{5,}\d{3,}$"
 DATA_FILE = "data/students.data"
 
 MAX_ENROLMENTS = 4
-MAX_SUBJECT_CALALOG = 10
 
 COLOURS = {
     "DEFAULT": "\033[37m",  # white
@@ -25,3 +24,5 @@ LOGIN_WINDOW = {"width": 540, "height": 320}
 SUBJECT_WINDOW = {"width": 560, "height": 380}
 
 EXCEPTION_WINDOW = {"width": 300, "height": 180}
+
+ENROLMENT_WINDOW = {"width": 540, "height": 300}

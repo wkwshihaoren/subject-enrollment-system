@@ -154,5 +154,5 @@ class EnrolmentController:
 
         for i in get_student_subject_data:
             c_print(
-                f"{INDENT_LVL_2}[ {i['subject_name']} :: {i['subject_id']} -- mark = {i['mark']} -- grade =  {i['grade']:>2} ]"
+                f"{INDENT_LVL_2}[ {i['subject_name']}::{i['subject_id']} -- mark = {i['mark']} -- grade =  {i['grade']:>2} ]"
             )

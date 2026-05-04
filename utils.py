@@ -1,7 +1,7 @@
 import re
 import random
 import models.database as db
-from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET, MAX_SUBJECT_CALALOG
+from constants import EMAIL_REGEX, PASSWORD_REGEX, COLOURS, RESET
 
 database = db.Database()
 
@@ -29,13 +29,6 @@ def randomize_subject_id() -> str:
         new_id = str(random.randint(1, 999)).zfill(3)
         if new_id not in existing_ids:
             return new_id
-
-
-def randomize_subject_catalog() -> dict:
-    return {
-        randomize_subject_id(): f"Subject {i + 1}"
-        for i in range(0, MAX_SUBJECT_CALALOG)
-    }
 
 
 def randomize_mark() -> int:
